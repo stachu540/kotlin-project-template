@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
     kotlin("jvm") version Version.kotlin
     id("org.jetbrains.dokka") version Version.dokka
@@ -10,6 +13,24 @@ allprojects {
 
     tasks {
         withType<Test> {
+            addTestListener(object : TestListener {
+                override fun beforeSuite(suite: TestDescriptor) {}
+                override fun beforeTest(desc: TestDescriptor) {}
+                override fun afterTest(desc: TestDescriptor, result: TestResult) {
+                    println("\nTest result: ${result.resultType}")
+                    println(
+                            "Test summary: ${result.testCount} tests, " +
+                                    "${result.successfulTestCount} succeeded, " +
+                                    "${result.failedTestCount} failed, " +
+                                    "${result.skippedTestCount} skipped"
+                    )
+                }
+                override fun afterSuite(suite: TestDescriptor, result: TestResult) {}
+            })
+            testLogging {
+                exceptionFormat = TestExceptionFormat.FULL
+                events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.PASSED)
+            }
             useJUnitPlatform()
         }
     }
