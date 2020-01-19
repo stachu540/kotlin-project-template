@@ -21,6 +21,7 @@ dependencies {
     api("org.slf4j:slf4j-api:${Version.slf4j}")
     testApi("ch.qos.logback:logback-classic:${Version.logback}")
     testApi(kotlin("test-junit5"))
+    testApi("org.junit.jupiter:junit-jupiter-engine:${Version.junit}")
 }
 
 tasks {
